@@ -1,0 +1,9 @@
+experiment_group,stage_order,stage,users
+Control,1,Page view,212163
+Control,2,Start trial click,17293
+Control,3,Free-trial enrollment,3785
+Control,4,Payment,2033
+Experiment,1,Page view,211362
+Experiment,2,Start trial click,17260
+Experiment,3,Free-trial enrollment,3423
+Experiment,4,Payment,1945

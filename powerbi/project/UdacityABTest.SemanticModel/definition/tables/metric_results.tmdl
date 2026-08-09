@@ -1,0 +1,68 @@
+table metric_results
+
+	measure 'Gross conversion change' = CALCULATE(MAX(metric_results[difference]), metric_results[metric] = "Gross conversion")
+		formatString: +0.00%;-0.00%
+
+	measure 'Net conversion change' = CALCULATE(MAX(metric_results[difference]), metric_results[metric] = "Net conversion")
+		formatString: +0.00%;-0.00%
+
+	column metric
+		dataType: string
+		summarizeBy: none
+		sourceColumn: metric
+
+	column control_rate
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: control_rate
+
+	column experiment_rate
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: experiment_rate
+
+	column difference
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: difference
+
+	column ci_low
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column practical_threshold
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: practical_threshold
+
+	column role
+		dataType: string
+		summarizeBy: none
+		sourceColumn: role
+
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	partition metric_results = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(#"DataFolder" & "\metric_results.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Headers, {{"metric", type text}, {"control_rate", type number}, {"experiment_rate", type number}, {"difference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"practical_threshold", type number}, {"role", type text}, {"status", type text}}, "en-US")
+			in
+				Typed

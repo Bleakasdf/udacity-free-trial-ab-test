@@ -1,0 +1,20 @@
+{
+  "input_checks": {
+    "rows": true,
+    "37_days_per_group": true,
+    "unique_group_date": true,
+    "nonnegative_counts": true,
+    "clicks_not_above_pageviews": true,
+    "payments_not_above_enrollments": true,
+    "14_day_outcome_lag": true
+  },
+  "output_checks": {
+    "seven_powerbi_files_present": true,
+    "expected_row_counts": true,
+    "expected_outcome_nulls": true,
+    "mature_daily_reconciles": true,
+    "funnel_reconciles": true,
+    "sanity_checks_pass": true,
+    "decision_reconciles": true
+  }
+}

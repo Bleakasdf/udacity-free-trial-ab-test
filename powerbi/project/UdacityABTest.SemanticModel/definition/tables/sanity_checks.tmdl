@@ -1,0 +1,39 @@
+table sanity_checks
+
+	column metric
+		dataType: string
+		summarizeBy: none
+		sourceColumn: metric
+
+	column observed
+		dataType: double
+		formatString: 0.000%
+		summarizeBy: none
+		sourceColumn: observed
+
+	column ci_low
+		dataType: double
+		formatString: 0.000%
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		formatString: 0.000%
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: status
+
+	partition sanity_checks = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(#"DataFolder" & "\sanity_checks.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Headers, {{"metric", type text}, {"observed", type number}, {"ci_low", type number}, {"ci_high", type number}, {"status", type text}}, "en-US")
+			in
+				Typed

@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.python-packages/
+data/processed/analysis.db
+*.tmp
+~$*.docx

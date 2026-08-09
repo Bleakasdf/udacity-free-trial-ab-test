@@ -1,0 +1,58 @@
+table decision_summary
+
+	measure 'Mature clicks' = MAX(decision_summary[mature_clicks])
+		formatString: #,##0
+
+	measure 'Required clicks' = MAX(decision_summary[target_clicks])
+		formatString: #,##0
+
+	measure 'Information coverage' = MAX(decision_summary[power_coverage])
+		formatString: 0.0%
+
+	column decision
+		dataType: string
+		summarizeBy: none
+		sourceColumn: decision
+
+	column primary_reason
+		dataType: string
+		summarizeBy: none
+		sourceColumn: primary_reason
+
+	column gross_conversion_change
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: gross_conversion_change
+
+	column net_conversion_change
+		dataType: double
+		formatString: 0.00%
+		summarizeBy: none
+		sourceColumn: net_conversion_change
+
+	column mature_clicks
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: mature_clicks
+
+	column target_clicks
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: target_clicks
+
+	column power_coverage
+		dataType: double
+		formatString: 0.0%
+		summarizeBy: none
+		sourceColumn: power_coverage
+
+	partition decision_summary = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(#"DataFolder" & "\decision_summary.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Headers, {{"decision", type text}, {"primary_reason", type text}, {"gross_conversion_change", type number}, {"net_conversion_change", type number}, {"mature_clicks", Int64.Type}, {"target_clicks", Int64.Type}, {"power_coverage", type number}}, "en-US")
+			in
+				Typed
